@@ -1,9 +1,9 @@
 var fs = require('fs');
 var async = require('async');
 var util = require('util');
+require('string.prototype.endswith');
 
-// MUST HAVE TRAILING '\\' IN START DIRECTORY!!!
-var startDir = 'C:\\Users\\dmazzeo\\Desktop\\isagw\\test\\';
+var startDir = 'C:\\Users\\dmazzeo\\Desktop\\test';
 
 var getFiles = function(dir, done) {
   var results = [];
