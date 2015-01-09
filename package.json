@@ -22,6 +22,7 @@
   "homepage": "https://github.com/dmazz55/FlattenFiles",
   "dependencies": {
     "async": "^0.9.0",
+    "prompt": "^0.2.14",
     "string.prototype.endswith": "^0.2.0",
     "util": "^0.10.3"
   }
