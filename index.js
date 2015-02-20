@@ -2,6 +2,7 @@ var fs = require('fs')
     ,async = require('async')
     ,util = require('util')
     ,prompt = require('prompt')
+    ,clc = require('cli-color')
 
 require('string.prototype.endswith');
 
@@ -33,6 +34,9 @@ var Print = function(){
 var p = new Print();
 var startDir;
 
+main();
+
+
 function main(){
   p.emptyLine();
   p.magenta('-----------------------------------');
@@ -47,7 +51,6 @@ function main(){
 function promptForInput(){
   prompt.start();
   prompt.get(['input'], function(err, result){
-    if (!checkResult(result)) return;
     startDir = result.input;
     startFlattening();
   });
