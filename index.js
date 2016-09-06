@@ -36,7 +36,6 @@ var startDir;
 
 main();
 
-
 function main(){
   p.emptyLine();
   p.magenta('-----------------------------------');
@@ -57,11 +56,11 @@ function promptForInput(){
 }
 
 var startFlattening = function(){
-  getFiles(startDir, function(err, results) {
-    if (err) throw err;
+  getFiles(startDir, startDir, function(err, results) {
+    if (err) throw err;	
     async.each(results,function(file, next){
-      console.log(getNewFilePath(file.fileName));
-      fs.renameSync(file.fullDir,getNewFilePath(file.fileName));
+      console.log(getNewFilePath(file.fileName, file.folderName));
+      fs.renameSync(file.fullDir,getNewFilePath(file.fileName, file.folderName));
     },function(err){
       if (err) p.red(err);
       p.green('Done!');
@@ -69,7 +68,7 @@ var startFlattening = function(){
   });
 }
 
-var getFiles = function(dir, done) {
+var getFiles = function(dir, startingDir, done) {
   var results = [];
   fs.readdir(dir, function(err, list) {
     if (err) return done(err);
@@ -79,12 +78,13 @@ var getFiles = function(dir, done) {
       var fileDir = dir + '/' + file;
       fs.stat(fileDir, function(err, stat) {
         if (stat && stat.isDirectory()) {
-          getFiles(fileDir, function(err, res) {
+          getFiles(fileDir, startingDir, function(err, res) {
             results = results.concat(res);
             if (!--pending) done(null, results);
           });
-        } else {
-          results.push({ fileName: file, fullDir: fileDir });
+        } else {		  
+		  var folder = dir.replace(startingDir,'').replace('/','');		  
+          results.push({ fileName: file, folderName: folder, fullDir: fileDir });
           if (!--pending) done(null, results);
         }
       });
@@ -92,6 +92,7 @@ var getFiles = function(dir, done) {
   });
 };
 
-function getNewFilePath(fileName){
-  return startDir.endsWith('\\') ? startDir + fileName : startDir + '\\' + fileName;
+function getNewFilePath(fileName, folderName){
+  var newFileName = folderName !== null && folderName.trim() !== '' ? folderName + '-' + fileName : fileName;
+  return startDir.endsWith('\\') ? startDir + fileName : startDir + '\\' + newFileName;
 }
